@@ -65,7 +65,7 @@ class ProjectRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView) :
 
             permissions = []
 
-            if self.request.method in ['POST']:
+            if self.request.method in ['PATCH','DELETE']:
 
                 permissions = [IsAdmin]
 
@@ -89,20 +89,6 @@ class AssignedProjectsListCreateView(ListCreateAPIView) :
     serializer_class = AssignedProjectsSerializer  
 
     authentication_classes = [JWTAuthentication]
-    
-    def get_permissions(self):
-
-            permissions = []
-
-            if self.request.method in ['PATCH','DELETE']:
-
-                permissions = [IsAdmin]
-
-            else :
-                    
-                permissions[IsAuthenticated]    
-
-            return [permission() for permission in permissions]       
     
     
     def get_permissions(self):
@@ -128,6 +114,22 @@ class AssignedProjectsRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView) :
     queryset = AssignedProject.objects.filter(active_status=True).select_related('project','coordinator').prefetch_related('developers')
 
     serializer_class = AssignedProjectsSerializer
+
+    authentication_classes = [JWTAuthentication]
+
+    def get_permissions(self):
+
+            permissions = []
+
+            if self.request.method in ['PATCH','DELETE']:
+
+                permissions = [IsAdmin]
+
+            else :
+                    
+                permissions[IsAuthenticated]    
+
+            return [permission() for permission in permissions]  
 
 
 
